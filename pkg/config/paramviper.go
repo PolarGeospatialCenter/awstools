@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -55,6 +56,7 @@ func (p *ParameterViper) translateViperPath(viperPath string) string {
 func (p *ParameterViper) getParamater(path string) (*ssm.Parameter, error) {
 	out, err := p.parameterStore.GetParameter(&ssm.GetParameterInput{Name: aws.String(path), WithDecryption: aws.Bool(true)})
 	if err != nil {
+		log.Printf("unable to read parameter from parameter store: %v", err)
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case ssm.ErrCodeInternalServerError:
